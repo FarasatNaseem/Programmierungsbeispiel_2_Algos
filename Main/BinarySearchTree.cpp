@@ -10,9 +10,9 @@ BinarySearchTree::~BinarySearchTree()
 	delete this->head;
 }
 
-void BinarySearchTree::Load()
+void BinarySearchTree::Load(std::string file)
 {
-	std::ifstream myfile("./Data.csv");
+	std::ifstream myfile(file);
 
 	int key;
 	std::string string_key;
