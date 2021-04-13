@@ -1,26 +1,11 @@
 #include "BinarySearchTree.h"
 
-/*
-----------------Binary search tree-------------------
-
-	5,3,10,15,22
-
-		 5
-		/ \
-	   3   10
-			\
-			15
-			 \
-			 22
-
-*/
-
 float avg = 0.0;
-static int sumOfNum = 0;
-static int totalNodes = 0;
+int sumOfNum = 0;
+int totalNodes = 0;
 int min = 0;
 int max = 0;
-static bool isAvl = true;
+bool isAvl = true;
 
 void Print(int key, int result)
 {
@@ -35,107 +20,36 @@ void Print(int key, int result)
 	}
 }
 
-void CalculateAndPrintBalanceFactor(BinarySearchTreeNode* bTreeNode)
+int CalculateViolationAndPrint(BinarySearchTreeNode* bTreeNode)
 {
-	int leftSideCounter = 0;
-	int rightSideCounter = 0;
+	int rightSide = 0;
+	int leftSide = 0;
 
 	if (bTreeNode != nullptr)
 	{
+		rightSide = CalculateViolationAndPrint(bTreeNode->GetRightNode());
+		leftSide = CalculateViolationAndPrint(bTreeNode->GetLeftNode());
+		
+		if (bTreeNode->GetKey() < min)
+			min = bTreeNode->GetKey();
+
+		if (bTreeNode->GetKey() > max)
+			max = bTreeNode->GetKey();
+
 		sumOfNum += bTreeNode->GetKey();
 		totalNodes++;
 
-		if (bTreeNode->GetRightNode() != nullptr)
+		Print(bTreeNode->GetKey(), rightSide - leftSide);
+
+		if (rightSide > leftSide)
 		{
-			if (bTreeNode->GetRightNode()->GetRightNode() != nullptr)
-			{
-				if (bTreeNode->GetRightNode()->GetLeftNode() != nullptr)
-				{
-					rightSideCounter += 3;
-				}
-				else
-				{
-					rightSideCounter += 2;
-				}
-			}
-			else
-			{
-				rightSideCounter++;
-			}
+			return 1 + rightSide;
 		}
 
-		if (bTreeNode->GetLeftNode() != nullptr)
-		{
-			if (bTreeNode->GetLeftNode()->GetRightNode() != nullptr)
-			{
-				if (bTreeNode->GetLeftNode()->GetLeftNode() != nullptr)
-				{
-					leftSideCounter += 3;
-				}
-				else
-				{
-					leftSideCounter += 2;
-				}
-			}
-			else
-			{
-				leftSideCounter++;
-			}
-		}
+		return 1 + leftSide;
 	}
 
-	Print(bTreeNode->GetKey(), rightSideCounter - leftSideCounter);
-
-	if (bTreeNode->GetLeftNode() != nullptr && bTreeNode->GetRightNode() != nullptr)
-	{
-		//     Calculating min and max
-		/*-----------------------------------------*/
-		if (bTreeNode->GetLeftNode()->GetKey() < min)
-			min = bTreeNode->GetLeftNode()->GetKey();
-
-		if (bTreeNode->GetRightNode()->GetKey() < min)
-			min = bTreeNode->GetRightNode()->GetKey();
-
-		if (bTreeNode->GetLeftNode()->GetKey() > max)
-			max = bTreeNode->GetLeftNode()->GetKey();
-
-		if (bTreeNode->GetRightNode()->GetKey() > max)
-			max = bTreeNode->GetRightNode()->GetKey();
-		/*-----------------------------------------*/
-
-		CalculateAndPrintBalanceFactor(bTreeNode->GetRightNode());
-		CalculateAndPrintBalanceFactor(bTreeNode->GetLeftNode());
-	}
-
-	if (bTreeNode->GetLeftNode() != nullptr && bTreeNode->GetRightNode() == nullptr)
-	{
-		//     Calculating min and max
-
-		/*-----------------------------------------*/
-		if (bTreeNode->GetLeftNode()->GetKey() < min)
-			min = bTreeNode->GetLeftNode()->GetKey();
-
-		if (bTreeNode->GetLeftNode()->GetKey() > max)
-			max = bTreeNode->GetLeftNode()->GetKey();
-		/*-----------------------------------------*/
-
-		CalculateAndPrintBalanceFactor(bTreeNode->GetLeftNode());
-	}
-
-	if (bTreeNode->GetRightNode() != nullptr && bTreeNode->GetLeftNode() == nullptr)
-	{
-		//     Calculating min and max
-
-		/*-----------------------------------------*/
-		if (bTreeNode->GetRightNode()->GetKey() < min)
-			min = bTreeNode->GetRightNode()->GetKey();
-
-		if (bTreeNode->GetRightNode()->GetKey() > max)
-			max = bTreeNode->GetRightNode()->GetKey();
-		/*-----------------------------------------*/
-
-		CalculateAndPrintBalanceFactor(bTreeNode->GetRightNode());
-	}
+	return rightSide - leftSide;
 }
 
 float CalculateAvg(int sumOfNodeValues, int totalNodes)
@@ -150,23 +64,21 @@ int main()
 	// Loading data from file.
 	binarySearchTree->Load("./Data.csv");
 
-	// min value = node 0 of tree
-	// max value = node 0 of tree
 	if (binarySearchTree->head != nullptr)
 	{
 		min = binarySearchTree->head->GetKey();
 		max = binarySearchTree->head->GetKey();
 	}
 
-	CalculateAndPrintBalanceFactor(binarySearchTree->head);
+	int heightOfTree = CalculateViolationAndPrint(binarySearchTree->head);
 
 	// Calculating avg
 	avg = CalculateAvg(sumOfNum, totalNodes);
 
 	if (isAvl)
-		std::cout << "AVL yes";
+		std::cout << "AVL: yes";
 	else
-		std::cout << "AVL no";
+		std::cout << "AVL: no";
 
 	std::cout << "\nMIN: " << min << " MAX: " << max << " AVG: " << avg << std::endl;
 }
