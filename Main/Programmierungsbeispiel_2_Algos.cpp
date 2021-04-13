@@ -158,7 +158,6 @@ int main()
 		max = binarySearchTree->head->GetKey();
 	}
 
-	//Print(binarySearchTree);
 	CalculateAndPrintBalanceFactor(binarySearchTree->head);
 
 	// Calculating avg
