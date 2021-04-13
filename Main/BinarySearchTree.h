@@ -11,10 +11,9 @@ class BinarySearchTree
 public:
 	BinarySearchTree();
 	~BinarySearchTree();
-	void Load();
+	void Load(std::string file);
 	BinarySearchTreeNode* head;
 
 private:
 	BinarySearchTreeNode* Insert(BinarySearchTreeNode* head, int key);
 };
-
