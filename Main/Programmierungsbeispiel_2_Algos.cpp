@@ -15,28 +15,159 @@
 
 */
 
+float avg = 0.0;
+static int sumOfNum = 0;
+static int totalNodes = 0;
+int min = 0;
+int max = 0;
+static bool isAvl = true;
 
-
-
-bool IsAVlTree()
+void Print(int key, int result)
 {
-	return true;
+	if (result < -1 || result > 1)
+	{
+		isAvl = false;
+		std::cout << "bal(" << key << ")" << " = " << result << " (AVL violation!)" << std::endl;
+	}
+	else
+	{
+		std::cout << "bal(" << key << ")" << " = " << result << std::endl;
+	}
+}
+
+void CalculateAndPrintBalanceFactor(BinarySearchTreeNode* bTreeNode)
+{
+	int leftSideCounter = 0;
+	int rightSideCounter = 0;
+
+	if (bTreeNode != nullptr)
+	{
+		sumOfNum += bTreeNode->GetKey();
+		totalNodes++;
+
+		if (bTreeNode->GetRightNode() != nullptr)
+		{
+			if (bTreeNode->GetRightNode()->GetRightNode() != nullptr)
+			{
+				if (bTreeNode->GetRightNode()->GetLeftNode() != nullptr)
+				{
+					rightSideCounter += 3;
+				}
+				else
+				{
+					rightSideCounter += 2;
+				}
+			}
+			else
+			{
+				rightSideCounter++;
+			}
+		}
+
+		if (bTreeNode->GetLeftNode() != nullptr)
+		{
+			if (bTreeNode->GetLeftNode()->GetRightNode() != nullptr)
+			{
+				if (bTreeNode->GetLeftNode()->GetLeftNode() != nullptr)
+				{
+					leftSideCounter += 3;
+				}
+				else
+				{
+					leftSideCounter += 2;
+				}
+			}
+			else
+			{
+				leftSideCounter++;
+			}
+		}
+	}
+
+	Print(bTreeNode->GetKey(), rightSideCounter - leftSideCounter);
+
+	if (bTreeNode->GetLeftNode() != nullptr && bTreeNode->GetRightNode() != nullptr)
+	{
+		//     Calculating min and max
+		/*-----------------------------------------*/
+		if (bTreeNode->GetLeftNode()->GetKey() < min)
+			min = bTreeNode->GetLeftNode()->GetKey();
+
+		if (bTreeNode->GetRightNode()->GetKey() < min)
+			min = bTreeNode->GetRightNode()->GetKey();
+
+		if (bTreeNode->GetLeftNode()->GetKey() > max)
+			max = bTreeNode->GetLeftNode()->GetKey();
+
+		if (bTreeNode->GetRightNode()->GetKey() > max)
+			max = bTreeNode->GetRightNode()->GetKey();
+		/*-----------------------------------------*/
+
+		CalculateAndPrintBalanceFactor(bTreeNode->GetRightNode());
+		CalculateAndPrintBalanceFactor(bTreeNode->GetLeftNode());
+	}
+
+	if (bTreeNode->GetLeftNode() != nullptr && bTreeNode->GetRightNode() == nullptr)
+	{
+		//     Calculating min and max
+
+		/*-----------------------------------------*/
+		if (bTreeNode->GetLeftNode()->GetKey() < min)
+			min = bTreeNode->GetLeftNode()->GetKey();
+
+		if (bTreeNode->GetLeftNode()->GetKey() > max)
+			max = bTreeNode->GetLeftNode()->GetKey();
+		/*-----------------------------------------*/
+
+		CalculateAndPrintBalanceFactor(bTreeNode->GetLeftNode());
+	}
+
+	if (bTreeNode->GetRightNode() != nullptr && bTreeNode->GetLeftNode() == nullptr)
+	{
+		//     Calculating min and max
+
+		/*-----------------------------------------*/
+		if (bTreeNode->GetRightNode()->GetKey() < min)
+			min = bTreeNode->GetRightNode()->GetKey();
+
+		if (bTreeNode->GetRightNode()->GetKey() > max)
+			max = bTreeNode->GetRightNode()->GetKey();
+		/*-----------------------------------------*/
+
+		CalculateAndPrintBalanceFactor(bTreeNode->GetRightNode());
+	}
+}
+
+float CalculateAvg(int sumOfNodeValues, int totalNodes)
+{
+	return (float)sumOfNodeValues / (float)totalNodes;
 }
 
 int main()
 {
-
 	BinarySearchTree* binarySearchTree = new BinarySearchTree();
-	binarySearchTree->Load();
+
+	// Loading data from file.
+	binarySearchTree->Load("./Data.csv");
+
+	// min value = node 0 of tree
+	// max value = node 0 of tree
+	if (binarySearchTree->head != nullptr)
+	{
+		min = binarySearchTree->head->GetKey();
+		max = binarySearchTree->head->GetKey();
+	}
+
+	//Print(binarySearchTree);
+	CalculateAndPrintBalanceFactor(binarySearchTree->head);
+
+	// Calculating avg
+	avg = CalculateAvg(sumOfNum, totalNodes);
+
+	if (isAvl)
+		std::cout << "AVL yes";
+	else
+		std::cout << "AVL no";
+
+	std::cout << "\nMIN: " << min << " MAX: " << max << " AVG: " << avg << std::endl;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
