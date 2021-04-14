@@ -21,4 +21,7 @@ int main()
 		std::cout << "AVL: no";
 
 	std::cout << "\nMIN: " << binarySearchTree->GetMinNode() << " MAX: " << binarySearchTree->GetMaxNode() << " AVG: " << avg << std::endl;
+	
+	delete binarySearchTree;
+	delete avlViolationDetector;
 }
