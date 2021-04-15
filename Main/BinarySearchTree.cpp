@@ -38,7 +38,7 @@ void BinarySearchTree::Load(std::string file)
 				key = stoi(string_key);
 				head = Insert(head, key);
 			}
-			catch (const char* msg)
+			catch (const char *msg)
 			{
 				std::cerr << msg << '\n';
 				break;
@@ -53,7 +53,7 @@ void BinarySearchTree::Load(std::string file)
 	}
 }
 
-BinarySearchTreeNode* BinarySearchTree::Insert(BinarySearchTreeNode* head, int key)
+BinarySearchTreeNode *BinarySearchTree::Insert(BinarySearchTreeNode *head, int key)
 {
 	if (head == nullptr)
 		head = new BinarySearchTreeNode(key);
@@ -122,4 +122,36 @@ void BinarySearchTree::SetSumOfAllNodes(int sumOfAllNodes)
 void BinarySearchTree::SetIsAVL(bool isAVL)
 {
 	this->isAVL = isAVL;
+}
+
+//search for a single integer & return the path from root to target as a list (return null if not found)
+std::list<int> *BinarySearchTree::SearchInt(int target)
+{
+	auto rv = new std::list<int>();
+	if (this->rSearchInt(target, this->head, rv))
+		return rv;
+	else
+	{
+		delete rv;
+		return nullptr;
+	}
+}
+
+//recursive loop to target int
+bool BinarySearchTree::rSearchInt(int target, BinarySearchTreeNode *currNode, std::list<int> *path)
+{
+	path->push_back(currNode->GetKey());
+	if (target == currNode->GetKey())
+	{
+		return true;
+	}
+	else
+	{
+		if (target > currNode->GetKey() && currNode->GetRightNode() != nullptr)
+			return rSearchInt(target, currNode->GetRightNode(), path);
+		else if (target < currNode->GetKey() && currNode->GetLeftNode() != nullptr)
+			return rSearchInt(target, currNode->GetLeftNode(), path);
+		else
+			return false;
+	}
 }

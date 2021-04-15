@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <list>
 
 class BinarySearchTree
 {
@@ -12,7 +13,7 @@ public:
 	BinarySearchTree();
 	~BinarySearchTree();
 	void Load(std::string file);
-	BinarySearchTreeNode* head;
+	BinarySearchTreeNode *head;
 	int GetMinNode();
 	int GetMaxNode();
 	int GetTotalNodes();
@@ -23,13 +24,14 @@ public:
 	void SetTotalNodes(int totalNodes);
 	void SetSumOfAllNodes(int sumOfAllNodes);
 	void SetIsAVL(bool isAVL);
+	std::list<int> *SearchInt(int target);
 
 private:
-	BinarySearchTreeNode* Insert(BinarySearchTreeNode* head, int key);
+	BinarySearchTreeNode *Insert(BinarySearchTreeNode *head, int key);
+	bool rSearchInt(int target, BinarySearchTreeNode *startNode, std::list<int> *path);
 	int min;
 	int max;
 	int totalNodes;
 	int sumOfAllNodes;
 	bool isAVL;
 };
-
