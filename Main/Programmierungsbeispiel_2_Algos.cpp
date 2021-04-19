@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
 		std::cout << "\nSearch:\n";
 		BinarySearchTree *target = new BinarySearchTree();
 		target->Load(std::string(argv[2]));
-		if (target->head->GetLeftNode() == nullptr && target->head->GetRightNode() == nullptr)
+		if (target->head->GetLeftNode() == nullptr && target->head->GetRightNode() == nullptr) //single node
 		{
 			//search for single node
 			std::list<int> *path = binarySearchTree->SearchInt(target->head->GetKey());
@@ -57,6 +57,15 @@ int main(int argc, char *argv[])
 			{
 				std::cout << target->head->GetKey() << " not found" << std::endl;
 			}
+		}
+		else //subtree
+		{
+			std::cout << "Subtree";
+			if (!binarySearchTree->SearchSubTree(target))
+			{
+				std::cout << " not";
+			}
+			std::cout << " found";
 		}
 		delete target;
 	}

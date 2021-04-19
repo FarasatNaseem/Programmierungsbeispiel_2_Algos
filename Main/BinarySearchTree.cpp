@@ -155,3 +155,52 @@ bool BinarySearchTree::rSearchInt(int target, BinarySearchTreeNode *currNode, st
 			return false;
 	}
 }
+
+bool BinarySearchTree::SearchSubTree(BinarySearchTree *target)
+{
+	return rSearchSubTree(this->head, target->head, false);
+}
+
+bool BinarySearchTree::rSearchSubTree(BinarySearchTreeNode *current, BinarySearchTreeNode *comp, bool prevMatch)
+{
+	if (comp == nullptr) //ende des gesuchten baumes erreicht
+	{
+		if (current == nullptr) //wenn der hauptbaum auch aus ist -> true
+			return true;
+		else
+			return false;
+	}
+	else if (current == nullptr) //knoten der im gesuchten Baum vorhanden ist, existiert im hauptbaum nicht
+		return false;
+
+	if (current->GetKey() == comp->GetKey())
+	{
+		//check if leaf node
+		/*if (current->IsLeaf() && comp->IsLeaf())
+			return true;*/
+
+		bool left = false, right = false;
+		//compare left subtree
+		//if (current->GetLeftNode() != nullptr)
+		//if (current->GetLeftNode()->GetKey() == comp->GetLeftNode()->GetKey())
+		left = rSearchSubTree(current->GetLeftNode(), comp->GetLeftNode(), true);
+
+		//compare right subtree
+		//if (current->GetRightNode() != nullptr)
+		//if (current->GetRightNode()->GetKey() == comp->GetRightNode()->GetKey())
+		right = rSearchSubTree(current->GetRightNode(), comp->GetRightNode(), true);
+
+		return left && right;
+	}
+	else if (prevMatch == false) //Unterschied nach einer Übereinstimmung -> suche kann abgebrochen werden
+	{
+		if (current->GetKey() > comp->GetKey())
+			return rSearchSubTree(current->GetLeftNode(), comp, false);
+		else
+			return rSearchSubTree(current->GetRightNode(), comp, false);
+	}
+	else
+	{
+		return false;
+	}
+}
