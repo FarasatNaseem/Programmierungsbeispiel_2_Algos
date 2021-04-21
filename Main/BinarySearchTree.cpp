@@ -175,22 +175,8 @@ bool BinarySearchTree::rSearchSubTree(BinarySearchTreeNode *current, BinarySearc
 
 	if (current->GetKey() == comp->GetKey())
 	{
-		//check if leaf node
-		/*if (current->IsLeaf() && comp->IsLeaf())
-			return true;*/
+		return rSearchSubTree(current->GetLeftNode(), comp->GetLeftNode(), true) && rSearchSubTree(current->GetRightNode(), comp->GetRightNode(), true);
 
-		bool left = false, right = false;
-		//compare left subtree
-		//if (current->GetLeftNode() != nullptr)
-		//if (current->GetLeftNode()->GetKey() == comp->GetLeftNode()->GetKey())
-		left = rSearchSubTree(current->GetLeftNode(), comp->GetLeftNode(), true);
-
-		//compare right subtree
-		//if (current->GetRightNode() != nullptr)
-		//if (current->GetRightNode()->GetKey() == comp->GetRightNode()->GetKey())
-		right = rSearchSubTree(current->GetRightNode(), comp->GetRightNode(), true);
-
-		return left && right;
 	}
 	else if (prevMatch == false) //Unterschied nach einer Übereinstimmung -> suche kann abgebrochen werden
 	{
