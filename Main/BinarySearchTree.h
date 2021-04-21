@@ -25,10 +25,12 @@ public:
 	void SetSumOfAllNodes(int sumOfAllNodes);
 	void SetIsAVL(bool isAVL);
 	std::list<int> *SearchInt(int target);
+	bool SearchSubTree(BinarySearchTree *target);
 
 private:
 	BinarySearchTreeNode *Insert(BinarySearchTreeNode *head, int key);
 	bool rSearchInt(int target, BinarySearchTreeNode *startNode, std::list<int> *path);
+	bool rSearchSubTree(BinarySearchTreeNode *currentNode, BinarySearchTreeNode *comp, bool prevMatch);
 	int min;
 	int max;
 	int totalNodes;

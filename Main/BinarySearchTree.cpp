@@ -155,3 +155,38 @@ bool BinarySearchTree::rSearchInt(int target, BinarySearchTreeNode *currNode, st
 			return false;
 	}
 }
+
+bool BinarySearchTree::SearchSubTree(BinarySearchTree *target)
+{
+	return rSearchSubTree(this->head, target->head, false);
+}
+
+bool BinarySearchTree::rSearchSubTree(BinarySearchTreeNode *current, BinarySearchTreeNode *comp, bool prevMatch)
+{
+	if (comp == nullptr) //ende des gesuchten baumes erreicht
+	{
+		if (current == nullptr) //wenn der hauptbaum auch aus ist -> true
+			return true;
+		else
+			return false;
+	}
+	else if (current == nullptr) //knoten der im gesuchten Baum vorhanden ist, existiert im hauptbaum nicht
+		return false;
+
+	if (current->GetKey() == comp->GetKey())
+	{
+		return rSearchSubTree(current->GetLeftNode(), comp->GetLeftNode(), true) && rSearchSubTree(current->GetRightNode(), comp->GetRightNode(), true);
+
+	}
+	else if (prevMatch == false) //Unterschied nach einer Übereinstimmung -> suche kann abgebrochen werden
+	{
+		if (current->GetKey() > comp->GetKey())
+			return rSearchSubTree(current->GetLeftNode(), comp, false);
+		else
+			return rSearchSubTree(current->GetRightNode(), comp, false);
+	}
+	else
+	{
+		return false;
+	}
+}

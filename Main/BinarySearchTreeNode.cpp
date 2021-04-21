@@ -7,12 +7,12 @@ BinarySearchTreeNode::BinarySearchTreeNode(int key)
 	this->Right = nullptr;
 }
 
-BinarySearchTreeNode* BinarySearchTreeNode::GetLeftNode()
+BinarySearchTreeNode *BinarySearchTreeNode::GetLeftNode()
 {
 	return this->Left;
 }
 
-BinarySearchTreeNode* BinarySearchTreeNode::GetRightNode()
+BinarySearchTreeNode *BinarySearchTreeNode::GetRightNode()
 {
 	return this->Right;
 }
@@ -22,12 +22,12 @@ int BinarySearchTreeNode::GetKey()
 	return this->key;
 }
 
-void BinarySearchTreeNode::SetLeftNode(BinarySearchTreeNode* leftNode)
+void BinarySearchTreeNode::SetLeftNode(BinarySearchTreeNode *leftNode)
 {
 	this->Left = leftNode;
 }
 
-void BinarySearchTreeNode::SetRightNode(BinarySearchTreeNode* rightNode)
+void BinarySearchTreeNode::SetRightNode(BinarySearchTreeNode *rightNode)
 {
 	this->Right = rightNode;
 }
