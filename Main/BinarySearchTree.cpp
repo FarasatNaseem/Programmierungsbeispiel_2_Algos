@@ -38,7 +38,7 @@ void BinarySearchTree::Load(std::string file)
 				key = stoi(string_key);
 				head = Insert(head, key);
 			}
-			catch (const char* msg)
+			catch (const char *msg)
 			{
 				std::cerr << msg << '\n';
 				break;
@@ -53,7 +53,7 @@ void BinarySearchTree::Load(std::string file)
 	}
 }
 
-BinarySearchTreeNode* BinarySearchTree::Insert(BinarySearchTreeNode* head, int key)
+BinarySearchTreeNode *BinarySearchTree::Insert(BinarySearchTreeNode *head, int key)
 {
 	if (head == nullptr)
 		head = new BinarySearchTreeNode(key);
@@ -122,4 +122,71 @@ void BinarySearchTree::SetSumOfAllNodes(int sumOfAllNodes)
 void BinarySearchTree::SetIsAVL(bool isAVL)
 {
 	this->isAVL = isAVL;
+}
+
+//search for a single integer & return the path from root to target as a list (return null if not found)
+std::list<int> *BinarySearchTree::SearchInt(int target)
+{
+	auto rv = new std::list<int>();
+	if (this->rSearchInt(target, this->head, rv))
+		return rv;
+	else
+	{
+		delete rv;
+		return nullptr;
+	}
+}
+
+//recursive loop to target int
+bool BinarySearchTree::rSearchInt(int target, BinarySearchTreeNode *currNode, std::list<int> *path)
+{
+	path->push_back(currNode->GetKey());
+	if (target == currNode->GetKey())
+	{
+		return true;
+	}
+	else
+	{
+		if (target > currNode->GetKey() && currNode->GetRightNode() != nullptr)
+			return rSearchInt(target, currNode->GetRightNode(), path);
+		else if (target < currNode->GetKey() && currNode->GetLeftNode() != nullptr)
+			return rSearchInt(target, currNode->GetLeftNode(), path);
+		else
+			return false;
+	}
+}
+
+bool BinarySearchTree::SearchSubTree(BinarySearchTree *target)
+{
+	return rSearchSubTree(this->head, target->head, false);
+}
+
+bool BinarySearchTree::rSearchSubTree(BinarySearchTreeNode *current, BinarySearchTreeNode *comp, bool prevMatch)
+{
+	if (comp == nullptr) //ende des gesuchten baumes erreicht
+	{
+		if (current == nullptr) //wenn der hauptbaum auch aus ist -> true
+			return true;
+		else
+			return false;
+	}
+	else if (current == nullptr) //knoten der im gesuchten Baum vorhanden ist, existiert im hauptbaum nicht
+		return false;
+
+	if (current->GetKey() == comp->GetKey())
+	{
+		return rSearchSubTree(current->GetLeftNode(), comp->GetLeftNode(), true) && rSearchSubTree(current->GetRightNode(), comp->GetRightNode(), true);
+
+	}
+	else if (prevMatch == false) //Unterschied nach einer Übereinstimmung -> suche kann abgebrochen werden
+	{
+		if (current->GetKey() > comp->GetKey())
+			return rSearchSubTree(current->GetLeftNode(), comp, false);
+		else
+			return rSearchSubTree(current->GetRightNode(), comp, false);
+	}
+	else
+	{
+		return false;
+	}
 }
